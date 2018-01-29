@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="scripts/jquery-1.8.2.min.js"></script>
+    <script>
+
+        
+
+
+        $(document).ready(function () {
+
+            //$(function(){
+            //    function yourfunction(event) {
+            //        event.preventDefault();
+            //        alert('some anchor clicked');
+            //        deleteUser($(this).closest('tr').children(':first').text());
+            //        return false;
+            //    }
+            //    $('#tblContacts a').live('click',yourfunction);
+            //    });
+
+            function deleteUser(id,name) {
+                var result = confirm("Are You Sure, Delete contact " + name + " ?");
+                var deleteApi = "http://localhost:56580/api/Contacts/" + id;
+                if (result == true) {
+                    $.ajax({
+                        url: deleteApi,
+                        type: "Delete",
+                        success: function (data) {
+                            alert('Deleted Successfully');
+                            window.location.href = "Contacts.html";
+                        },
+                        error: function (msg) { alert(msg); }
+                    });
+                }
+            }
+
+            $('#tblContacts').click(function (e) {
+                var source = $(e.target);
+                if (source.is('#DelContact')) { //or source.hasClass('delete') 
+                    var id = source.closest('tr').find('td.id').text();
+                    var name = source.closest('tr').find('td.name').text();
+                    deleteUser(id, name);
+                    e.preventDefault();
+                }
+            });
+
+        $.ajax({
+            url: "http://localhost:56580/api/Contacts",
+            type: "Get",      
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("<tr><td class='id'>" + data[i].ID + "</td><td class='name'>" + data[i].Name + "</td><td>" + data[i].Phone + "</td><td>" + data[i].Email + "</td><td><a href=Edit.html?id=" + data[i].ID + ">Edit</a></td><td><a id='DelContact' href='#'>Delete</a></td><tr>").appendTo("#tblContacts");
+
+                }
+            },
+            error: function (msg) { alert(msg); }
+        });
+    });
+    </script>
+</head>
+<body>
+    <h1>Contacts</h1>
+    <hr />
+
+    <a href="Create.html">Create New Contact</a>
+    <br />
+
+    <table id="tblContacts" style="border:1px">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+        </tr>
+    </table>
+
+</body>
+</html>

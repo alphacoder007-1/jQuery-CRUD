@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="scripts/jquery-1.8.2.min.js"></script>
+    <script lang="ja" type="text/javascript">
+
+        function GetQueryStringParams(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+
+        $(document).ready(function () {
+
+            var id = GetQueryStringParams('id');
+            var puturl = "http://localhost:56580/api/Contacts/"+id;
+
+            $.ajax({
+                url:puturl,
+                type: "Get",
+                success: function (data) {
+                    $("#ID").html(data.ID);
+                    $("#Name").val(data.Name);
+                    $("#Phone").val(data.Phone);
+                    $("#Email").val(data.Email);
+                },
+                error: function (msg) { alert("Failed"); alert(msg); }
+            });
+            
+
+            $("#btnSubmit").click(function () {
+            var id = $("#ID").html();
+            var name = $("#Name").val();
+            var phone = $("#Phone").val();
+            var email = $("#Email").val();
+            var contact = new Object();
+            contact.ID = id;
+            contact.Name = name;
+            contact.Phone = phone;
+            contact.Email = email;
+            
+            var apiUrl = "http://localhost:56580/api/Contacts/" + id;
+
+            $.ajax({
+                url: apiUrl,
+                type: "Put",
+                data: JSON.stringify(contact),
+                contentType: 'application/json; charset=utf-8',
+                success: function (contact) {
+                    alert('Updated Successfully');
+                    window.location.href = "Contacts.html";
+                },
+                error: function () { alert('error'); }
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <h1>Edit</h1>
+    <hr />
+
+    <div>
+        ID :   <label for="ID" id="ID" ></label> <br />
+        Name : <input type="text"  id="Name" /> <br />
+        Phone : <input type="text" id="Phone" /> <br />
+        Email : <input type="text" id="Email" /> <br />
+    </div>
+
+    <br />
+
+    <p>
+        <input type="submit" value="Save" id="btnSubmit" />
+    </p>
+
+</body>
+</html>

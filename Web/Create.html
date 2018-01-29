@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="scripts/jquery-1.8.2.min.js"></script>
+    <script lang="ja" type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSubmit").click(function () {
+            var name = $("#Name").val();
+            var phone = $("#Phone").val();
+            var email = $("#Email").val();
+            var contact = new Object();
+            contact.Name = name;
+            contact.Phone = phone;
+            contact.Email = email;
+            $.ajax({
+                url: "http://localhost:56580/api/Contacts",
+                type: "Post",
+                data: JSON.stringify(contact),
+                contentType: 'application/json; charset=utf-8',
+                success: function (contact) {
+                    alert('Created Successfully');
+                    window.location.href = "Contacts.html";
+                },
+                error: function () { alert('error'); }
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <h1>Create</h1>
+    <hr />
+
+    <div>
+        Name : <input type="text" name="Name" id="Name" /> <br />
+        Phone : <input type="text" name="Phone" id="Phone" /> <br />
+        Email : <input type="text" name="Email" id="Email" /> <br />
+    </div>
+
+    <br />
+
+    <p>
+        <input type="submit" value="Create" name="btnSubmit" id="btnSubmit"/>
+    </p>
+
+</body>
+</html>
